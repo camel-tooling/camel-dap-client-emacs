@@ -6,7 +6,7 @@
 I just got the debug integration for camel in emacs running using (https://emacs-lsp.github.io/dap-mode/page/adding-debug-server/). In order to not forget the config, I decided to quickly compile this readme.
 
 ## Prerequisites
- - version 3.16+
+ - Camel version 3.18+
  - camel-debug is available on the classpath
  - have JMX enabled
 
@@ -14,7 +14,7 @@ I just got the debug integration for camel in emacs running using (https://emacs
 
 In a `~/.emacs.d/dap-camel.el` file:
 
-```
+```lisp
 (dap-register-debug-provider
  "camel"
  (lambda (conf)
@@ -24,18 +24,14 @@ In a `~/.emacs.d/dap-camel.el` file:
 (dap-register-debug-template "Camel Attach"
                              (list :type "camel"
                                    :request "attach"
-                                   :args ""
-				                   :port 1099
-				                   :dap-server-path '("java" "-jar" "PATH/TO/camel-dap-server-0.4.0.
-                                                       jar")
+                                   :port 1099
+                                   :dap-server-path '("java" "-jar" "PATH/TO/camel-dap-server-0.4.0.jar")
                                    :name "Run Configuration"))
-
-(setq debug-on-error t)
 ```
 <kbd>M-x</kbd> `eval-buffer`
 
 # How to get Camel Debug Adapter server.jar file?
-- I found 2 releases of camel DAP server here - https://github.com/camel-tooling/camel-debug-adapter/tags but it doesn't contain any jar files. To get a jar file either you can compile the source or download from the Maven Central repository.
+- To get a jar file either you can compile the source or download from the Maven Central repository.
 - To download from Maven Central repository
 ```sh
 cd /home
@@ -46,30 +42,9 @@ curl -LO https://repo1.maven.org/maven2/com/github/camel-tooling/camel-dap-serve
 
 * To test the camel application debugging need a working example. Lot of good examples are provided in this repo, [camel-examples](https://github.com/apache/camel-examples).
 
-* To enable Camel Textual Route debugging, you need to launch this examples with the profile `camel.debug`.
+* To enable Camel Textual Route debugging, you need to launch this examples with `mvn camel:debug`.
 
 * I have specifically used [example-main](https://github.com/apache/camel-examples/tree/main/examples/main) in this setup.
-
-* You can also debug [example-basic](https://github.com/apache/camel-examples/tree/main/examples/basic) but only after adding the following lines to `pom.xml` and compiling the source with `mvn clean install`
-```xml
-<profiles>
-        <profile>
-            <id>camel.debug</id>
-            <activation>
-                <property>
-                    <name>camel.debug</name>
-                    <value>true</value>
-                </property>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.apache.camel</groupId>
-                    <artifactId>camel-debug</artifactId>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
-```
 
 ## In Terminal
 ```sh
